@@ -1,9 +1,8 @@
-import pandas as pd
+import requests
+import urllib.request
 
-def get_webpage(url):
-    try:
-        df = pd.read_html(url)
-    except ValueError:
-        print("data found in webpage")
-    else:
-        return df
+url = "https://en.wikipedia.org/wiki/2008_Summer_Olympics"
+
+uf = urllib.request.urlopen(url)
+html = uf.read()
+print(type(html))
