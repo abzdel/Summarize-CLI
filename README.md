@@ -19,3 +19,5 @@
 - current process
 1. new python program to load in onnx model and run prediction from command line input
 2. run this program inside of rust
+
+
