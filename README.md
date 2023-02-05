@@ -21,3 +21,6 @@
 2. run this program inside of rust
 
 
+
+check following folder to find where hugging face stuff is being saved: 
+Downloading and preparing dataset wiki_dpr/dummy.psgs_w100.nq.no_index to /home/codespace/.cache/huggingface/datasets/wiki_dpr/dummy.psgs_w100.nq.no_index-dummy=True,with_index=False/0.0.0/74d4bff38a7c18a9498fafef864a8ba7129e27cb8d71b22f5e14d84cb17edd54...
