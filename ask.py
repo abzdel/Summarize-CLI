@@ -6,9 +6,10 @@ model = RagTokenForGeneration.from_pretrained("facebook/rag-token-nq", retriever
 
 """
 for office hours:
-- want to store all of the above 3 on some cloud storage/model hosting
+- want to store just model on some cloud storage/model hosting
 - wrap this into a rust program? wouldnt think there would be performance benefits with how I have it set up
 - answer is different depending on if i run it through bash or python??
+- load tokenizer in rust?
 
 """
 
