@@ -24,6 +24,30 @@ predictor = huggingface_model.deploy(
 	instance_type='ml.m5.xlarge' # ec2 instance type
 )
 
+"""
+rust bindings for aws
+can just make http call to endpoint
+cmd line tool - call aws cli for sagemaker inference
+    s3 easy storage
+
+https://docs.aws.amazon.com/sagemaker/latest/dg/neo-requests-cli.html
+^wrap call, parse output
+
+
+----
+click cmd line tool, wrap current tool in click
+
+other things:
+    - pyo3 rust crate - python running in rust
+        - clap (rust) - cmd line tool
+    - wrap commands in rust, call from cmd line (aws cli tool)
+    shelling out to cmd
+
+
+rust modules imported to python - more logical approach to pyo3 solution
+
+"""
+
 while True:
     text = input("\nenter text to summarize: ")
     print("(enter 'exit' at any time to terminate program)\n")
@@ -36,8 +60,11 @@ while True:
     print("\n")
 
 # way to output the predictor and use as an environment variable?
+# could export it and use it in rust + separate deployment and inference - look cli tool
 
 print("program terminated. deleting model and endpoint...")
+# if program is exited before this, we need some other way to delete the endpoint
+# maybe try from cli tool - wrap in a bash script or something
 
 # delete model
 predictor.delete_model()
