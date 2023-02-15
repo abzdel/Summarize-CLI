@@ -49,8 +49,7 @@ rust modules imported to python - more logical approach to pyo3 solution
 """
 
 while True:
-    text = input("\nenter text to summarize: ")
-    print("(enter 'exit' at any time to terminate program)\n")
+    text = input("\nenter text to summarize (or type 'exit' to quit): ")
 
     if text == "exit":
         break
