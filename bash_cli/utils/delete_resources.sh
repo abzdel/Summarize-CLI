@@ -1,4 +1,4 @@
-source check_active.sh
+source ./utils/check_active.sh # source not working in utils folder
 
 # take out quotes from environment variables, store in temp variables
 model_temp=$(echo $model | tr -d '"')
