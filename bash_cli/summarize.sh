@@ -12,8 +12,7 @@ echo $endpt_temp
 echo "invoking endpoint..."
 aws sagemaker-runtime invoke-endpoint \
     --endpoint-name $endpt_temp \
-    --body ["test, text, to, summarize, hope, this, works"] \
-    --content-type text/csv \
-    output_file.txt
+    --body fileb://corpus.csv \
+    --content-type text/csv output_file.txt
 
 echo "finished, results in output_file.txt"
