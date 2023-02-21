@@ -12,7 +12,10 @@ echo $endpt_temp
 echo "invoking endpoint..."
 aws sagemaker-runtime invoke-endpoint \
     --endpoint-name $endpt_temp \
-    --body fileb://corpus.csv \
-    --content-type text/csv output_file.txt
+    --body file://corpus.json \
+    --content-type application/json output_file.txt
 
 echo "finished, results in output_file.txt"
+echo "result:\n"
+cat output_file.txt
+echo "\n finished now - remember to run utils/delete_resources.sh to avoid being charged for unused resources"

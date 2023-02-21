@@ -4,7 +4,7 @@ import sagemaker
 role = sagemaker.get_execution_role()
 # Hub Model configuration. https://huggingface.co/models
 hub = {
-	'HF_MODEL_ID':'philschmid/bart-large-cnn-samsum',
+	'HF_MODEL_ID':'google/pegasus-xsum',
 	'HF_TASK':'summarization'
 }
 
@@ -48,14 +48,16 @@ rust modules imported to python - more logical approach to pyo3 solution
 
 """
 
-while True:
+text = ""
+
+while text != "exit":
     text = input("\nenter text to summarize (or type 'exit' to quit): ")
 
     if text == "exit":
         break
     print("predicting...\n")
 
-    print("Summarized text: \n" + predictor.predict({"inputs": text})[0].get('summary_text'))
+    print("Summarized text: \n\n" + predictor.predict({"inputs": text})[0].get('summary_text'))
     print("\n")
 
 # way to output the predictor and use as an environment variable?

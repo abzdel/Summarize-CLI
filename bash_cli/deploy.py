@@ -10,7 +10,7 @@ import sagemaker
 role = sagemaker.get_execution_role()
 # Hub Model configuration. https://huggingface.co/models
 hub = {
-	'HF_MODEL_ID':'philschmid/bart-large-cnn-samsum',
+	'HF_MODEL_ID':'google/pegasus-xsum',
 	'HF_TASK':'summarization'
 }
 
