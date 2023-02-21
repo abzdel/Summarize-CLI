@@ -2,12 +2,8 @@ source ./utils/check_active.sh
 
 endpt_temp=$(echo $endpt | tr -d '"') # remove quotes for sagemaker invocation
 
-
-echo $endpt_temp
-# converting txt to csv
-#sed 's/ \+/,/g' corpus.txt > corpus.csv
-
-#corpus=$(<corpus.txt)
+# run to_json to clean up user input
+python to_json.py
 
 echo "invoking endpoint..."
 aws sagemaker-runtime invoke-endpoint \
@@ -15,7 +11,7 @@ aws sagemaker-runtime invoke-endpoint \
     --body file://corpus.json \
     --content-type application/json output_file.txt
 
-echo "finished, results in output_file.txt"
-echo "result:\n"
-cat output_file.txt
-echo "\n finished now - remember to run utils/delete_resources.sh to avoid being charged for unused resources"
+echo -e "finished, results in output_file.txt\n"
+echo "result: "
+./utils/print_output.sh
+echo -e "\nfinished now - remember to run utils/delete_resources.sh to avoid being charged for unused resources"

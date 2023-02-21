@@ -13,5 +13,6 @@ test:
 
 clean:
 	rm -r bash_cli/.*.txt # remove all .txt files in bash_cli
+	rm -r to_json/target # remove target files - too big to store in git
 
 all: install lint format
