@@ -1,5 +1,5 @@
 name: summarize
-help: A tool to deploy models to AWS Sagemaker and query its associated endpoints for inference. Place desired input in bash_cli/corpus.txt. Result will be stored in output_file.txt in base directory.
+help: A tool to deploy models to AWS Sagemaker and query its associated endpoints for inference. Place desired input in corpus.txt. Result will be stored in output_file.txt.
 version: 0.1.0
 
 # environment_variables:
@@ -12,30 +12,42 @@ commands:
   help: Deploy summarization model to AWS Sagemaker from Hugging Face. Tool uses pegasus-xsum (huggingface.co/google/pegasus-xsum) by default
 
   args:
-  - name: show_endpoint
+  - name: show-endpoint
     required: false
     help: List names of endpoint & endpoint configurations hosted on Sagemaker after deployment
 
-  - name: show_model
+  - name: show-model
     required: false
     help: List name of model hosted on Sagemaker after deployment
 
-  flags:
-  - long: --one-query
-    short: -o
-    help: Shut down all resources after one query to the endpoint
-
   examples:
-  - summarize show_endpoint show_model
+  - ./summarize d
+  - ./summarize deploy
+  - ./summarize d show_endpoint show_model
 
 - name: query
   alias: q
-  help: Send query from input given in bash_cli/corpus.txt file to model's endpoint and return result in output_file.txt
+  help: Send query from input given in corpus.txt file to model's endpoint and return result in output_file.txt
+
+  examples:
+  - ./summarize q
+  - ./summarize query
 
 - name: remove
   alias: rem
   help: Remove all running resources from AWS Sagemaker. Delete endpoint, endpoint configuration, and model
 
+  examples:
+  - ./summarize rem
+  - ./summarize remove
+
 - name: restore
   alias: res
   help: Regenerate configuration files in case tool stops working
+
+  examples:
+  - ./summarize restore
+  - ./summarize res
+
+
+# trunc command to automatically truncate to 2155?

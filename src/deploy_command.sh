@@ -1,7 +1,12 @@
 # check if model is active
 # if model is active, then don't deploy
-if [ "$model_active" = true ]; then
+if [[ $(aws sagemaker list-models | jq ".Models[0].ModelName") != null ]]; then
     echo "model is already active. run 'query' command to invoke endpoint or 'remove' to remove model & endpoint."
+    exit 1
+fi
+
+if [[ $(aws sagemaker list-endpoints | jq ".Endpoints[0].EndpointName") != null ]]; then
+    echo "endpoint is already active. run 'query' command to invoke endpoint or 'remove' to remove model & endpoint."
     exit 1
 fi
 
@@ -10,21 +15,15 @@ echo "model deployed. run tool with 'query' command to invoke endpoint"
 
 source bash_cli/utils/check_active.sh
 
-
-# create flag variable to check if model is active
-# if model is active, then don't deploy
-model_active=true
-
-
 inspect_args
-endpt_check=${args[show_endpoint]}
-model_check=${args[show_model]}
+endpt_check=${args[show-endpoint]}
+model_check=${args[show-model]}
 
-if [ "$endpt_check"]; then
+if [[ "$endpt_check" ]]; then
     echo "endpoint: $endpt"
     echo "endpoint config: $endptconfig"
 fi
 
-if [ "$model_check"]; then
+if [[ "$model_check" ]]; then
     echo "model: $model"
 fi

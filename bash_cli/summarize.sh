@@ -1,3 +1,9 @@
+# check if corpus is too long
+if [[ $(wc -w output_file.txt) > 1024 ]]; then
+    echo "corpus is too long. please shorten to 1025 words or less"
+    exit 1
+fi
+echo $(wc -w output_file.txt)
 source ./bash_cli/utils/check_active.sh
 
 endpt_temp=$(echo $endpt | tr -d '"') # remove quotes for sagemaker invocation
@@ -14,5 +20,3 @@ aws sagemaker-runtime invoke-endpoint \
 echo -e "finished, results in output_file.txt\n"
 echo "result: "
 ./bash_cli/utils/print_output.sh
-echo -e "\nremember to run utils/delete_resources.sh to avoid being charged for unused resources"
-

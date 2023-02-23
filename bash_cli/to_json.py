@@ -1,5 +1,5 @@
 # read in corpus.txt file
-file = open("bash_cli/corpus.txt", "r")
+file = open("corpus.txt", "r")
 text = file.read()
 
 # remove all double quotes from text

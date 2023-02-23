@@ -18,11 +18,11 @@ version_command() {
 # :command.usage
 summarize_usage() {
   if [[ -n $long_usage ]]; then
-    printf "summarize - A tool to deploy models to AWS Sagemaker and query its associated endpoints for inference. Place desired input in bash_cli/corpus.txt. Result will be stored in output_file.txt in base directory.\n"
+    printf "summarize - A tool to deploy models to AWS Sagemaker and query its associated endpoints for inference. Place desired input in corpus.txt. Result will be stored in output_file.txt.\n"
     echo
 
   else
-    printf "summarize - A tool to deploy models to AWS Sagemaker and query its associated endpoints for inference. Place desired input in bash_cli/corpus.txt. Result will be stored in output_file.txt in base directory.\n"
+    printf "summarize - A tool to deploy models to AWS Sagemaker and query its associated endpoints for inference. Place desired input in corpus.txt. Result will be stored in output_file.txt.\n"
     echo
 
   fi
@@ -35,7 +35,7 @@ summarize_usage() {
   # :command.usage_commands
   printf "%s\n" "Commands:"
   printf "  %s   Deploy summarization model to AWS Sagemaker from Hugging Face. Tool uses pegasus-xsum (huggingface.co/google/pegasus-xsum) by default\n" "deploy "
-  printf "  %s   Send query from input given in bash_cli/corpus.txt file to model's endpoint and return result in output_file.txt\n" "query  "
+  printf "  %s   Send query from input given in corpus.txt file to model's endpoint and return result in output_file.txt\n" "query  "
   printf "  %s   Remove all running resources from AWS Sagemaker. Delete endpoint, endpoint configuration, and model\n" "remove "
   printf "  %s   Regenerate configuration files in case tool stops working\n" "restore"
   echo
@@ -71,19 +71,13 @@ summarize_deploy_usage() {
   echo
 
   printf "%s\n" "Usage:"
-  printf "  summarize deploy [SHOW_ENDPOINT] [SHOW_MODEL] [OPTIONS]\n"
+  printf "  summarize deploy [SHOW-ENDPOINT] [SHOW-MODEL]\n"
   printf "  summarize deploy --help | -h\n"
   echo
 
   # :command.long_usage
   if [[ -n $long_usage ]]; then
     printf "%s\n" "Options:"
-
-    # :command.usage_flags
-    # :flag.usage
-    printf "  %s\n" "--one-query, -o"
-    printf "    Shut down all resources after one query to the endpoint\n"
-    echo
 
     # :command.usage_fixed_flags
     printf "  %s\n" "--help, -h"
@@ -94,18 +88,20 @@ summarize_deploy_usage() {
     printf "%s\n" "Arguments:"
 
     # :argument.usage
-    printf "  %s\n" "SHOW_ENDPOINT"
+    printf "  %s\n" "SHOW-ENDPOINT"
     printf "    List names of endpoint & endpoint configurations hosted on Sagemaker after\n    deployment\n"
     echo
 
     # :argument.usage
-    printf "  %s\n" "SHOW_MODEL"
+    printf "  %s\n" "SHOW-MODEL"
     printf "    List name of model hosted on Sagemaker after deployment\n"
     echo
 
     # :command.usage_examples
     printf "%s\n" "Examples:"
-    printf "  summarize show_endpoint show_model\n"
+    printf "  ./summarize d\n"
+    printf "  ./summarize deploy\n"
+    printf "  ./summarize d show_endpoint show_model\n"
     echo
 
   fi
@@ -114,11 +110,11 @@ summarize_deploy_usage() {
 # :command.usage
 summarize_query_usage() {
   if [[ -n $long_usage ]]; then
-    printf "summarize query - Send query from input given in bash_cli/corpus.txt file to model's endpoint and return result in output_file.txt\n"
+    printf "summarize query - Send query from input given in corpus.txt file to model's endpoint and return result in output_file.txt\n"
     echo
 
   else
-    printf "summarize query - Send query from input given in bash_cli/corpus.txt file to model's endpoint and return result in output_file.txt\n"
+    printf "summarize query - Send query from input given in corpus.txt file to model's endpoint and return result in output_file.txt\n"
     echo
 
   fi
@@ -138,6 +134,12 @@ summarize_query_usage() {
     # :command.usage_fixed_flags
     printf "  %s\n" "--help, -h"
     printf "    Show this help\n"
+    echo
+
+    # :command.usage_examples
+    printf "%s\n" "Examples:"
+    printf "  ./summarize q\n"
+    printf "  ./summarize query\n"
     echo
 
   fi
@@ -172,6 +174,12 @@ summarize_remove_usage() {
     printf "    Show this help\n"
     echo
 
+    # :command.usage_examples
+    printf "%s\n" "Examples:"
+    printf "  ./summarize rem\n"
+    printf "  ./summarize remove\n"
+    echo
+
   fi
 }
 
@@ -202,6 +210,12 @@ summarize_restore_usage() {
     # :command.usage_fixed_flags
     printf "  %s\n" "--help, -h"
     printf "    Show this help\n"
+    echo
+
+    # :command.usage_examples
+    printf "%s\n" "Examples:"
+    printf "  ./summarize restore\n"
+    printf "  ./summarize res\n"
     echo
 
   fi
@@ -257,8 +271,13 @@ summarize_deploy_command() {
   # src/deploy_command.sh
   # check if model is active
   # if model is active, then don't deploy
-  if [ "$model_active" = true ]; then
+  if [[ $(aws sagemaker list-models | jq ".Models[0].ModelName") != null ]]; then
       echo "model is already active. run 'query' command to invoke endpoint or 'remove' to remove model & endpoint."
+      exit 1
+  fi
+
+  if [[ $(aws sagemaker list-endpoints | jq ".Endpoints[0].EndpointName") != null ]]; then
+      echo "endpoint is already active. run 'query' command to invoke endpoint or 'remove' to remove model & endpoint."
       exit 1
   fi
 
@@ -267,20 +286,16 @@ summarize_deploy_command() {
 
   source bash_cli/utils/check_active.sh
 
-  # create flag variable to check if model is active
-  # if model is active, then don't deploy
-  model_active=true
-
   inspect_args
-  endpt_check=${args[show_endpoint]}
-  model_check=${args[show_model]}
+  endpt_check=${args[show-endpoint]}
+  model_check=${args[show-model]}
 
-  if [ "$endpt_check"]; then
+  if [[ "$endpt_check" ]]; then
       echo "endpoint: $endpt"
       echo "endpoint config: $endptconfig"
   fi
 
-  if [ "$model_check"]; then
+  if [[ "$model_check" ]]; then
       echo "model: $model"
   fi
 
@@ -290,6 +305,10 @@ summarize_deploy_command() {
 summarize_query_command() {
   # src/query_command.sh
   bash_cli/summarize.sh
+
+  echo -e "\nremember to run ./summarize remove to avoid being charged for unused resources"
+  echo "replace text in corpus.txt to run a new query"
+
   #inspect_args # add back if you want to add args or flags
 
 }
@@ -299,8 +318,6 @@ summarize_remove_command() {
   # src/remove_command.sh
   ./bash_cli/utils/delete_resources.sh
 
-  # overwrite model active to be false
-  model_active=false
   #inspect_args # add back if you want to add args or flags
 
 }
@@ -308,11 +325,8 @@ summarize_remove_command() {
 # :command.function
 summarize_restore_command() {
   # src/restore_command.sh
-  echo "# this file is located in 'src/restore_command.sh'"
-  echo "# code for 'summarize restore' goes here"
-  echo "# you can edit it freely and regenerate (it will not be overwritten)"
-  inspect_args
-
+  source ./bash_cli/utils/check_active.sh
+  echo "local files regenerated"
 }
 
 # :command.parse_requirements
@@ -433,13 +447,6 @@ summarize_deploy_parse_requirements() {
   while [[ $# -gt 0 ]]; do
     key="$1"
     case "$key" in
-      # :flag.case
-      --one-query | -o)
-
-        # :flag.case_no_arg
-        args['--one-query']=1
-        shift
-        ;;
 
       -?*)
         printf "invalid option: %s\n" "$key" >&2
@@ -449,13 +456,13 @@ summarize_deploy_parse_requirements() {
       *)
         # :command.parse_requirements_case
         # :command.parse_requirements_case_simple
-        if [[ -z ${args['show_endpoint']+x} ]]; then
+        if [[ -z ${args['show-endpoint']+x} ]]; then
 
-          args['show_endpoint']=$1
+          args['show-endpoint']=$1
           shift
-        elif [[ -z ${args['show_model']+x} ]]; then
+        elif [[ -z ${args['show-model']+x} ]]; then
 
-          args['show_model']=$1
+          args['show-model']=$1
           shift
         else
           printf "invalid argument: %s\n" "$key" >&2
