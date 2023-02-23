@@ -1,5 +1,5 @@
 # read in corpus.txt file
-file = open("corpus.txt", "r")
+file = open("bash_cli/corpus.txt", "r")
 text = file.read()
 
 # remove all double quotes from text
@@ -11,7 +11,7 @@ text = text.replace("\n","")
 
 
 # create a file named corpus.json
-with open('corpus.json', 'w') as f:
+with open('bash_cli/corpus.json', 'w') as f:
     f.write('{"inputs": "')
     f.write(text)
     f.write('"}')

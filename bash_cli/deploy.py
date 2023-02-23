@@ -23,9 +23,11 @@ huggingface_model = HuggingFaceModel(
 	role=role, 
 )
 
-print("deploying model to SageMaker Inference. this may take a few minutes...")
+print("deploying model to SageMaker. this may take a few minutes...")
 # deploy model to SageMaker Inference
 predictor = huggingface_model.deploy(
 	initial_instance_count=1, # number of instances
 	instance_type='ml.m5.xlarge' # ec2 instance type
 )
+
+print("\nmodel deployed!")

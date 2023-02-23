@@ -1,0 +1,17 @@
+ideas for where im going:
+- add a custom link tag - will *attempt* to parse html from any webpage you pass it and return its summary
+- add a custom model tag - will deploy different models apart from the default we're using here
+- move to_json to rust, see if we can move model deployment to rust as well
+
+
+-cd
+    - linting, formatting
+    - context of a bash script -> put to separate environment
+    - put in efs?
+        - invoke from lambda? timer instead of event 
+    - cloudbuild
+
+
+- fix delete resources
+    - when codespace ended and i came back a few hours later, resources were still running but delete resources errored out
+
