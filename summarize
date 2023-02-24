@@ -276,16 +276,20 @@ summarize_deploy_command() {
       exit 1
   fi
 
+  # do the same for endpoint
   if [[ $(aws sagemaker list-endpoints | jq ".Endpoints[0].EndpointName") != null ]]; then
       echo "endpoint is already active. run 'query' command to invoke endpoint or 'remove' to remove model & endpoint."
       exit 1
   fi
 
+  # deploy
   python bash_cli/deploy.py
   echo "model deployed. run tool with 'query' command to invoke endpoint"
 
+  # source check_active script to make sure we have endpoint & model names in environment
   source bash_cli/utils/check_active.sh
 
+  # check if user wants to see endpoint or model names
   inspect_args
   endpt_check=${args[show-endpoint]}
   model_check=${args[show-model]}
@@ -304,7 +308,31 @@ summarize_deploy_command() {
 # :command.function
 summarize_query_command() {
   # src/query_command.sh
-  bash_cli/summarize.sh
+  # check if corpus is too long
+  if [[ $(wc -w corpus.txt | cut -d' ' -f1) > 1024 ]]; then
+      echo "corpus is too long. please shorten to 1025 words or less"
+      echo "current corpus length: $(wc -w corpus.txt | cut -d' ' -f1)"
+      exit 1
+  fi
+
+  # source check_active to ensure we have endpoint & model names in environment
+  source ./bash_cli/utils/check_active.sh
+
+  # pull endpoint name & clean for invoke command
+  endpt_temp=$(echo $endpt | tr -d '"') # remove quotes for sagemaker invocation
+
+  # run to_json to clean up user input
+  python bash_cli/to_json.py
+
+  echo "invoking endpoint..."
+  aws sagemaker-runtime invoke-endpoint \
+      --endpoint-name $endpt_temp \
+      --body file://bash_cli/corpus.json \
+      --content-type application/json output_file.txt
+
+  echo -e "finished, results in output_file.txt\n"
+  echo "result: "
+  ./bash_cli/utils/print_output.sh
 
   echo -e "\nremember to run ./summarize remove to avoid being charged for unused resources"
   echo "replace text in corpus.txt to run a new query"
