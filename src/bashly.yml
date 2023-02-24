@@ -51,3 +51,4 @@ commands:
 
 
 # trunc command to automatically truncate to 2155?
+# point at different files - would be useful for test cases
