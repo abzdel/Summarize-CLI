@@ -1,3 +1,5 @@
 sagemaker
 aws-configure
 sagemaker_inference
+black
+pylint

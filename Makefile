@@ -3,18 +3,18 @@ install:
 		pip install -r requirements.txt
 
 format:
-	black dblib/*.py
+	black bash_cli/*.py
+	black summarize.ipynb
+	black test_cases/generator.py
 
 lint:
-	pylint --disable=R,C dblib
+	pylint --disable=R,C bash_cli/*.py
+	pylint --disable=R,C test_cases/generator.py
 
 test:
 	echo "no tests yet"
 
 clean:
-	#rm -r bash_cli/.*.txt # remove all .txt files in bash_cli
-	#rm -r .*.txt # remove all .txt files in base folder (can end up here depending on where script is run)
-
-	#rm -r to_json/target # remove target files - too big to store in git
+	rm -r bash_cli/.*.txt # remove all hidden .txt files in bash_cli - may cause tool to stop working if run when model is deployed
 
 all: install lint format
