@@ -12,9 +12,9 @@ lint:
 	pylint --disable=R,C tests/generator.py
 
 test:
-	echo "no tests yet"
+	bats test
 
 clean:
-	rm -r bash_cli/.*.txt # remove all hidden .txt files in bash_cli - may cause tool to stop working if run when model is deployed
+	rm -r .*.txt # remove all hidden .txt files in bash_cli - may cause tool to stop working if run when model is deployed
 
-all: install lint format
+all: install lint format test

@@ -12,7 +12,7 @@ if [[ $(wc -w corpus.txt | cut -d' ' -f1) -gt 1024 ]]; then
 fi
 
 # source check_active to ensure we have endpoint & model names in environment
-source ./bash_cli/utils/check_active.sh
+export endpt=$(aws sagemaker list-endpoints | jq ".Endpoints[0].EndpointName")
 
 # pull endpoint name & clean for invoke command
 endpt_temp=$(echo $endpt | tr -d '"') # remove quotes for sagemaker invocation
@@ -28,7 +28,7 @@ aws sagemaker-runtime invoke-endpoint \
 
 echo -e "finished, results in output_file.txt\n"
 echo "result: "
-./bash_cli/utils/print_output.sh
+./src/print_output.sh
 
 
 
@@ -36,6 +36,6 @@ echo "result: "
 echo -e "\nremember to run './summarize remove' to avoid being charged for unused resources"
 echo "replace text in corpus.txt to run a new query"
 
-
+exit 0
 
 #inspect_args # add back if you want to add args or flags

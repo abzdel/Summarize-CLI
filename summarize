@@ -286,8 +286,10 @@ summarize_deploy_command() {
   python bash_cli/deploy.py
   echo "model deployed. run tool with 'query' command to invoke endpoint"
 
-  # source check_active script to make sure we have endpoint & model names in environment
-  source bash_cli/utils/check_active.sh
+  # make sure we have endpoint & model names in environment
+  export model=$(aws sagemaker list-models | jq ".Models[0].ModelName")
+  export endpt=$(aws sagemaker list-endpoints | jq ".Endpoints[0].EndpointName")
+  export endptconfig=$(aws sagemaker list-endpoint-configs | jq ".EndpointConfigs[0].EndpointConfigName")
 
   # check if user wants to see endpoint or model names
   inspect_args
@@ -303,6 +305,7 @@ summarize_deploy_command() {
       echo "model: $model"
   fi
 
+  exit 0
 }
 
 # :command.function
@@ -322,7 +325,7 @@ summarize_query_command() {
   fi
 
   # source check_active to ensure we have endpoint & model names in environment
-  source ./bash_cli/utils/check_active.sh
+  export endpt=$(aws sagemaker list-endpoints | jq ".Endpoints[0].EndpointName")
 
   # pull endpoint name & clean for invoke command
   endpt_temp=$(echo $endpt | tr -d '"') # remove quotes for sagemaker invocation
@@ -338,10 +341,12 @@ summarize_query_command() {
 
   echo -e "finished, results in output_file.txt\n"
   echo "result: "
-  ./bash_cli/utils/print_output.sh
+  ./src/print_output.sh
 
   echo -e "\nremember to run './summarize remove' to avoid being charged for unused resources"
   echo "replace text in corpus.txt to run a new query"
+
+  exit 0
 
   #inspect_args # add back if you want to add args or flags
 
@@ -350,8 +355,33 @@ summarize_query_command() {
 # :command.function
 summarize_remove_command() {
   # src/remove_command.sh
-  ./bash_cli/utils/delete_resources.sh
+  export model=$(aws sagemaker list-models | jq ".Models[0].ModelName")
+  export endpt=$(aws sagemaker list-endpoints | jq ".Endpoints[0].EndpointName")
+  export endptconfig=$(aws sagemaker list-endpoint-configs | jq ".EndpointConfigs[0].EndpointConfigName")
 
+  # if model endpoint and endpoint config are all empty, then no active resources
+  if [ -z "$model" ] && [ -z "$endpt" ] && [ -z "$endptconfig" ]; then
+      echo "no active resources to delete"
+      exit 0
+  fi
+
+  # take out quotes from environment variables, store in temp variables
+  model_temp=$(echo $model | tr -d '"')
+  endpt_temp=$(echo $endpt | tr -d '"')
+  endptconfig_temp=$(echo $endptconfig | tr -d '"')
+
+  # load in model and endpoint names
+  echo "deleting resources..."
+  aws sagemaker delete-model --model-name $model_temp
+  echo "model deleted"
+  aws sagemaker delete-endpoint --endpoint-name $endpt_temp
+  echo "endpoint deleted"
+  aws sagemaker delete-endpoint-config --endpoint-config-name $endptconfig_temp
+  echo "endpoint config deleted"
+
+  echo "all resources successfully deleted!"
+
+  exit 0
   #inspect_args # add back if you want to add args or flags
 
 }
@@ -359,8 +389,22 @@ summarize_remove_command() {
 # :command.function
 summarize_restore_command() {
   # src/restore_command.sh
-  source ./bash_cli/utils/check_active.sh
-  echo "local files regenerated"
+  # run aws sagemaker list-models in a loop and save each "ModelName" to local file
+  # repeat same step for endpoint (check if config is deleted with it)
+
+  # parse json for model and endpoint names
+  aws sagemaker list-models | jq ".Models[0].ModelName" > bash_cli/.modelname.txt
+  aws sagemaker list-endpoints | jq ".Endpoints[0].EndpointName" > bash_cli/.endpointname.txt
+  aws sagemaker list-endpoint-configs | jq ".EndpointConfigs[0].EndpointConfigName" > bash_cli/.endpointconfigname.txt
+
+  # export above to environment variables
+  # may be a better way to eliminate the multiple steps here
+  # must source this script in the delete_resources.sh script
+  export model=$(cat bash_cli/.modelname.txt)
+  export endpt=$(cat bash_cli/.endpointname.txt)
+  export endptconfig=$(cat bash_cli/.endpointconfigname.txt)
+
+  exit 0
 }
 
 # :command.parse_requirements

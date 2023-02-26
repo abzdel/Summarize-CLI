@@ -5,11 +5,11 @@ def generate(iteration):
 
 
 # generate 1024 words
-with open("test_cases/1024words.txt", "w", encoding='UTF-8') as f:
+with open("test_cases/1024words.txt", "w", encoding="UTF-8") as f:
     for i in range(1024):
         f.write(str(generate(i)) + " ")
 
 # generate 1025 words - should fail
-with open("test_cases/1025words.txt", "w", encoding='UTF-8') as f:
+with open("test_cases/1025words.txt", "w", encoding="UTF-8") as f:
     for i in range(1025):
         f.write(str(generate(i)) + " ")
