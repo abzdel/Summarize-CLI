@@ -1,9 +1,3 @@
-"""
-copied from summarize.py
-only utilizes deploy step
-
-"""
-
 from sagemaker.huggingface import HuggingFaceModel
 import sagemaker
 

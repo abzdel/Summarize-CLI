@@ -5,11 +5,11 @@ install:
 format:
 	black bash_cli/*.py
 	black summarize.ipynb
-	black test_cases/generator.py
+	black tests/generator.py
 
 lint:
 	pylint --disable=R,C bash_cli/*.py
-	pylint --disable=R,C test_cases/generator.py
+	pylint --disable=R,C tests/generator.py
 
 test:
 	echo "no tests yet"

@@ -308,6 +308,12 @@ summarize_deploy_command() {
 # :command.function
 summarize_query_command() {
   # src/query_command.sh
+  # check if model is inactive
+  if [[ $(aws sagemaker list-models | jq ".Models[0].ModelName") == null ]]; then
+      echo "model inactive. run './summarize deploy' to deploy model and activate the query functionality"
+      exit 1
+  fi
+
   # check if corpus is too long
   if [[ $(wc -w corpus.txt | cut -d' ' -f1) -gt 1024 ]]; then
       echo "corpus is too long. please shorten to 1025 words or less"
