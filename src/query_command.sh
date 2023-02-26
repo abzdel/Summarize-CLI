@@ -1,5 +1,5 @@
 # check if corpus is too long
-if [[ $(wc -w corpus.txt | cut -d' ' -f1) > 1024 ]]; then
+if [[ $(wc -w corpus.txt | cut -d' ' -f1) -gt 1024 ]]; then
     echo "corpus is too long. please shorten to 1025 words or less"
     echo "current corpus length: $(wc -w corpus.txt | cut -d' ' -f1)"
     exit 1
@@ -27,7 +27,7 @@ echo "result: "
 
 
 
-echo -e "\nremember to run ./summarize remove to avoid being charged for unused resources"
+echo -e "\nremember to run './summarize remove' to avoid being charged for unused resources"
 echo "replace text in corpus.txt to run a new query"
 
 
