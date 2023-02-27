@@ -2,4 +2,5 @@ sagemaker
 aws-configure
 sagemaker_inference
 black
+black[jupyter]
 pylint
