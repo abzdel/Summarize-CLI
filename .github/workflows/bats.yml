@@ -1,0 +1,19 @@
+name: Run Bats tests
+
+on:
+  push:
+    tags:
+      - main
+
+jobs:
+  test:
+    name: Test Docker container
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Run Bats tests
+        uses: ffurrer2/bats-action@v1
+        with:
+          community: docker-cli
+          args: bats test
