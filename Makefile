@@ -10,7 +10,11 @@ lint:
 	pylint --disable=R,C bash_cli/*.py
 
 check:
-	chmod +x test/*.bats
+	chmod +x test/deploy_tests.bats
+	chmod +x test/query_tests.bats
+	chmod +x test/restore_tests.bats
+	chmod +x test/remove_tests.bats
+
 	./test/deploy_tests.bats
 	./test/query_tests.bats
 	./test/restore_tests.bats
