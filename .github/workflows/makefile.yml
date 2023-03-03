@@ -28,7 +28,15 @@ jobs:
       - name: Install dependencies
         run: make install
 
-      - name: Run check
-        run: make check
-
+      - name: test deploy
+        run: ./test/deploy_tests.bats
+        
+      - name: test query
+        run: ./test/query_tests.bats
+        
+      - name: test restore
+        run: ./test/restore_tests.bats
+        
+      - name: test remove
+        run: ./test/remove_tests.bats
 
