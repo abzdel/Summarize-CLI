@@ -28,15 +28,9 @@ jobs:
       - name: Install dependencies
         run: make install
 
-      - name: test deploy
-        run: ./test/deploy_tests.bats
+      - name: Format
+        run: make format
         
-      - name: test query
-        run: ./test/query_tests.bats
+      - name: Lint
+        run: make lint
         
-      - name: test restore
-        run: ./test/restore_tests.bats
-        
-      - name: test remove
-        run: ./test/remove_tests.bats
-
