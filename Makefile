@@ -15,4 +15,5 @@ check:
 clean:
 	rm -r bash_cli/.*.txt # remove all hidden .txt files in bash_cli - may cause tool to stop working if run when model is deployed
 
+
 all: install lint format check
