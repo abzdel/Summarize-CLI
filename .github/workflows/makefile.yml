@@ -5,16 +5,30 @@ on:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
-
+    
 jobs:
-  test:
-    name: Test Docker container
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Run Bats tests
-        uses: ffurrer2/bats-action@v1
-        with:
-          community: docker-cli
-          args: bats test
+   my_test:
+     runs-on: ubuntu-latest
+     name: Install Bats common libs
+     steps:
+       - name: Checkout
+         uses: actions/checkout@v2
+       - name: Setup BATS
+         uses: mig4/setup-bats@v1
+       - name: Setup Bats libs
+         uses: brokenpip3/setup-bats-libs@0.0.2
+         
+   build:
+
+      runs-on: ubuntu-latest
+
+      steps:
+      - uses: actions/checkout@v3
+
+      - name: Install dependencies
+        run: make install
+
+      - name: Run check
+        run: make check
+
+
