@@ -1,3 +1,5 @@
+[![Tests](https://github.com/nogibjj/Summarize-CLI/actions/workflows/bats.yml/badge.svg)](https://github.com/nogibjj/Summarize-CLI/actions/workflows/bats.yml)
+[![Makefile](https://github.com/nogibjj/Summarize-CLI/actions/workflows/makefile.yml/badge.svg)](https://github.com/nogibjj/Summarize-CLI/actions/workflows/makefile.yml)
 ## Summarize CLI
 
 Summarize CLI is a project that leverages the [Pegasus-Xsum model](https://huggingface.co/google/pegasus-xsum) from Hugging Face to generate summaries of input text. The tool is implemented in Python and Bash and is deployed to AWS SageMaker for remote inference. The project includes a command-line interface as well as a Jupyter notebook version of the same logic for interactive use.
