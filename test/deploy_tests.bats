@@ -16,7 +16,7 @@ setup() {
 }
 
 @test "should exit with success code if model is inactive" {
-    run deploy_command.sh
+    run ./summarize d
     [ "$status" -eq 0 ]
 }
 
