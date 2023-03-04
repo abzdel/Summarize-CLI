@@ -5,7 +5,7 @@ if [[ $(aws sagemaker list-models | jq ".Models[0].ModelName") == null ]]; then
 fi
 
 # check if corpus is too long
-if [[ $(wc -w corpus.txt | cut -d' ' -f1) -gt 1024 ]]; then
+if [[ $(wc -m corpus.txt | cut -d' ' -f1) -gt 2155 ]]; then
     echo "corpus is too long. please shorten to 1025 words or less"
     echo "current corpus length: $(wc -w corpus.txt | cut -d' ' -f1)"
     exit 1
