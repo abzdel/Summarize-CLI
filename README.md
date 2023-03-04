@@ -48,4 +48,4 @@ make install
 ```
 
 ## Jupyter notebook
-To use the Jupyter notebook version of Summarize CLI, open the summarize-cli.ipynb notebook in Jupyter and follow the instructions in the notebook.
+To use the Jupyter notebook version of Summarize CLI, open the summarize.ipynb notebook in Jupyter and follow the instructions in the notebook.
