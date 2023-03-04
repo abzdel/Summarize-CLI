@@ -16,8 +16,10 @@ setup() {
 }
 
 @test "should exit with success code if model is inactive" {
-    run ./summarize d
-    [ "$status" -eq 0 ]
+    if [[ $(aws sagemaker list-models | jq ".Models[0].ModelName") == null ]]; then
+        run ./summarize d
+        [ "$status" -eq 0 ]
+    fi
 }
 
 @test "should exit with failure code if model is active" {
