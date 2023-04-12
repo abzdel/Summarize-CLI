@@ -1,7 +1,8 @@
 from sagemaker.huggingface import HuggingFaceModel
 import sagemaker
 
-role = sagemaker.get_execution_role()
+#role = sagemaker.get_execution_role()
+role = ''
 # Hub Model configuration. https://huggingface.co/models
 hub = {"HF_MODEL_ID": "google/pegasus-xsum", "HF_TASK": "summarization"}
 
